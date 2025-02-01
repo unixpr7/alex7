@@ -1,28 +1,44 @@
 #include <iostream>
 #include <cmath> // для использования функции sqrt
+#include <limits> // для std::numeric_limits
 
 using namespace std;
 
-int main() {
-    // Объявляем переменные для сторон треугольника
-    double a, b, c;
+// Функция для ввода длины стороны с проверкой
+double inputSide(const string& sideName) {
+    double side;
+    while (true) {
+        cout << "Введите длину стороны " << sideName << ": ";
+        cin >> side;
 
+        // Проверка корректности ввода
+        if (cin.fail() || side <= 0) {
+            cin.clear(); // сбросить состояние потока
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // игнорировать неверный ввод
+            cout << "Введите положительное число." << endl;
+        } else {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // игнорировать лишние символы
+            return side;
+        }
+    }
+}
+
+// Функция для вычисления площади треугольника
+double calculateArea(double a, double b, double c) {
+    double p = (a + b + c) / 2;
+    return sqrt(p * (p - a) * (p - b) * (p - c));
+}
+
+int main() {
     // Ввод сторон треугольника
-    cout << "Введите длину стороны a: ";
-    cin >> a;
-    cout << "Введите длину стороны b: ";
-    cin >> b;
-    cout << "Введите длину стороны c: ";
-    cin >> c;
+    double a = inputSide("a");
+    double b = inputSide("b");
+    double c = inputSide("c");
 
     // Проверка на существование треугольника
     if (a + b > c && a + c > b && b + c > a) {
-        // Вычисление полупериметра
-        double p = (a + b + c) / 2;
-
-        // Вычисление площади по формуле Герона
-        double area = sqrt(p * (p - a) * (p - b) * (p - c));
-
+        // Вычисление площади
+        double area = calculateArea(a, b, c);
         // Вывод результата
         cout << "Площадь треугольника: " << area << endl;
     } else {
